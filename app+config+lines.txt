@@ -1,0 +1,2 @@
+app.config["SECRET_KEY"] = "myapplication123"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
