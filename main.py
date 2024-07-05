@@ -14,7 +14,7 @@ app.config["MAIL_SERVER"] = "smtp.gmail.com"                # Change to fit your
 app.config["MAIL_PORT"] = 587   # 465 for SMTP, 587 for TLS
 app.config["MAIL_USE_SSL"] = False
 app.config["MAIL_USERNAME"] = "EMAIL_ADDRESS"           # Sender email address
-app.config["MAIL_PASSWORD"] = "EMAIL_PASSWORD"          # Sender email password
+app.config["MAIL_PASSWORD"] = os.getenv("PASSWORD")          # Sender email password, checks for environment variable PASSWORD
 app.config["MAIL_USE_TLS"] = True
 
 db = SQLAlchemy(app)
