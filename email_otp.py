@@ -16,6 +16,8 @@ def sendEmailVerificationRequest(sender=sender, receiver="DEFAULT_RECEIVER"):
     server.starttls()
     server.login(sender, password)
     cur_otp = generateOTP()
+    
+    # Creates email subject and body with OTP
     msg = f"Subject: Your OTP Password\n\nThank you for signing up!\nYour OTP is: {cur_otp}"
     server.sendmail(sender, receiver, msg)
     server.quit()

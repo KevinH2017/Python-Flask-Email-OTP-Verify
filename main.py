@@ -23,7 +23,8 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 class Form(db.Model):
-    """Creates columns and their datatypes inside email.db"""
+    """Creates columns and their datatypes inside database"""
+    # Creates .db file if none is found with these attributes
     __tablename__ = "emails"
     id_num = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(80))
@@ -46,7 +47,7 @@ def verify():
     # Sends OTP to receiver then sets OTP to session as 'current_otp'
     current_otp = sendEmailVerificationRequest(sender=app.config["MAIL_USERNAME"], receiver=rec_email) 
     session['current_otp'] = current_otp
-    return render_template('verify.html')  
+    return render_template('verify.html', email=rec_email)  
 
 
 @app.route('/validate', methods=["POST"])
@@ -59,10 +60,9 @@ def validate():
     user_otp = request.form['otp'] 
      
     if int(current_user_otp) == int(user_otp):  
-        email = rec_email                       # Gets email from global variable rec_email
 
         form = Form( 
-            email=email, 
+            email=rec_email, 
         )
 
         db.session.add(form)
@@ -71,7 +71,7 @@ def validate():
         message_body = "Thank you for subscribing to our mailing list!"
         message = Message("Welcome to Our Mailing list!",
                             sender=app.config["MAIL_USERNAME"], 
-                            recipients=[email],
+                            recipients=[rec_email],
                             body=message_body)
         
         mail.send(message)
