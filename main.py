@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
-from email_otp import *
+from email_otp import sendEmailVerificationRequest
 import os
 
 app = Flask(__name__)
@@ -43,9 +43,9 @@ def verify():
     global rec_email 
     rec_email = request.form["email"]
        
-    current_otp = sendEmailVerificationRequest(receiver=rec_email) # this function sends otp to the receiver and also returns the same otp for our session storage
+    current_otp = sendEmailVerificationRequest(sender=app.config["MAIL_USERNAME"], receiver=rec_email) # this function sends otp to the receiver and also returns the same otp for our session storage
     session['current_otp'] = current_otp
-    return render_template('verify.html', email=rec_email)  
+    return render_template('verify.html')  
 
 
 @app.route('/validate', methods=["POST"])
@@ -74,12 +74,13 @@ def validate():
                             body=message_body)
         
         mail.send(message)
-        return "<h3> Your email has been successfully verified! </h3>"  
+        return render_template("success.html") 
     else:
-        return "<h3> Oops! Email Verification Failure, OTP does not match. </h3>"   
+        return render_template("error.html") 
     
  
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        app.run(debug=True, port=5001)
+        app.run(debug=True, port=5001)    # Runs on local 127.0.0.1 network
+        # app.run(host="0.0.0.0")         # Opens webpage to entire network (Uses host IPv4 address)
