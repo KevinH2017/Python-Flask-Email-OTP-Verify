@@ -14,10 +14,9 @@ def sendEmailVerificationRequest(sender=sender, receiver="DEFAULT_RECEIVER"):
     """Sends OTP email to receiver"""
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    # google_app_password = os.getenv("PASSWORD")
     server.login(sender, password)
     cur_otp = generateOTP()
-    msg = "Hello, Your OTP is " +  cur_otp
-    server.sendmail(sender,receiver,msg)
+    msg = f"Subject: Your OTP Password\n\nThank you for signing up!\nYour OTP is: {cur_otp}"
+    server.sendmail(sender, receiver, msg)
     server.quit()
     return cur_otp

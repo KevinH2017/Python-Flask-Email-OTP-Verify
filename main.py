@@ -39,11 +39,12 @@ def index():
 
 @app.route('/verify', methods=["POST"])  
 def verify():  
-    """Sends email with One-Time-Password code"""
+    """Sends email with One-Time password (OTP)"""
     global rec_email 
     rec_email = request.form["email"]
        
-    current_otp = sendEmailVerificationRequest(sender=app.config["MAIL_USERNAME"], receiver=rec_email) # this function sends otp to the receiver and also returns the same otp for our session storage
+    # Sends OTP to receiver then sets OTP to session as 'current_otp'
+    current_otp = sendEmailVerificationRequest(sender=app.config["MAIL_USERNAME"], receiver=rec_email) 
     session['current_otp'] = current_otp
     return render_template('verify.html')  
 
